@@ -51,7 +51,62 @@ ob_start();
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" name="gen_add">ADD</button>
                     </div>
-                </form>                
+                </form>
+
+                <!-- Update Operation -->
+
+                <?php
+                    if(isset($_GET['update_id'])){
+                        $update_id = $_GET['update_id'];
+
+                        $sql4 = "SELECT * FROM genre WHERE gen_id = '$update_id'";
+                        $result = mysqli_query($db,$sql4);
+
+                        while($row = mysqli_fetch_assoc($result)){
+                            $gen_name = $row['gen_name'];
+                            $gen_desc = $row['gen_desc'];
+                        }
+                ?>               
+
+                <h1 class="my-5">Update Information</h1>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Genre Name</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="gen_name" value="<?php echo $gen_name?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Genre Description</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="gen_desc"><?php echo $gen_desc?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-warning" name="gen_update">UPDATE</button>
+                    </div>
+                </form>
+
+                <?php
+
+                    }
+
+                ?>
+
+                <?php 
+                
+                    if(isset($_POST['gen_update'])){
+                        $gen_name = $_POST['gen_name'];
+                        $gen_desc = $_POST['gen_desc'];
+
+                        $sql5 = "UPDATE genre SET gen_name = '$gen_name', gen_desc = '$gen_desc' WHERE gen_id = '$update_id'";
+                        $result = mysqli_query($db,$sql5);
+
+                        if($result){
+                            // echo "Successfully Updated";
+                            header('location: index.php');
+                        } else {
+                            echo "Update Operation Failed!";
+                        }
+                    }
+                ?>
+
             </div>
 
             <?php
@@ -101,7 +156,7 @@ ob_start();
                                     <td><?php echo $gen_name ?></td>
                                     <td><?php echo $gen_desc ?></td>
                                     <td>
-                                        <a href="" class="mx-2"><i class="fas fa-edit text-warning"></i></a>
+                                        <a href="index.php?update_id=<?php echo $gen_id?>" class="mx-2"><i class="fas fa-edit text-warning"></i></a>
                                         <a href="index.php?delete_id=<?php echo $gen_id?>"><i class="fas fa-trash-alt text-danger"></i></a>
                                     </td>
                                 </tr>
